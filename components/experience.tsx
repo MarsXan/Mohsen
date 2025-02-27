@@ -1,15 +1,19 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
 export default function Experience() {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
+
+  const [showAll, setShowAll] = useState(false)
 
   const experiences = [
     {
@@ -22,7 +26,7 @@ export default function Experience() {
         "Utilized Google Cloud Platform (GCP) services like Firestore, Cloud Functions, Storage, and Analytics to build a scalable, cloud-native infrastructure.",
         "Managed technical direction and team coordination, driving efficient project execution and delivery across mobile and backend teams.",
       ],
-      skills: ["SwiftUI", "GCP", "Firestore", "Cloud Functions","Firebase","AR"],
+      skills: ["SwiftUI", "GCP", "Firestore", "Cloud Functions", "Firebase", "AR"],
     },
     {
       title: "iOS & Android Developer",
@@ -64,7 +68,45 @@ export default function Experience() {
       ],
       skills: ["Jetpack", "Navigation Component", "PWA", "Microservices", "DevOps"],
     },
+    {
+      title: "Android & iOS Developer",
+      company: "Happy",
+      location: "Australia (Remote)",
+      period: "Jul 2020 – Jan 2022",
+      description: [
+        "Modernized nannies app for Android and iOS, improving performance by 30% and enhancing user experience.",
+        "Refactored codebase, leading to a 20% reduction in maintenance overhead.",
+        "Implemented best practices in mobile development, ensuring a scalable and robust solution for the app's long-term growth.",
+      ],
+      skills: ["Android", "iOS", "Performance Optimization", "Code Refactoring"],
+    },
+    {
+      title: "Android, iOS Developer",
+      company: "Parsa",
+      location: "Tehran, Iran",
+      period: "Jan 2016 – Jul 2020",
+      description: [
+        "Developed products such as online taxi and courier systems, enabling a 25% faster time-to-market and improving scalability to handle 2,000,000+ users.",
+        "Led the development of a location-based SaaS framework, enabling service providers (e.g., taxi, courier, and shopping services) to launch fully functional apps in less than a week.",
+        "Managed cross-functional teams, driving the design, development, and deployment of location-based platforms across Android and iOS.",
+      ],
+      skills: ["Android", "iOS", "Location-based Services", "SaaS", "Team Leadership"],
+    },
+    {
+      title: "Backend & Android Developer",
+      company: "Rahyab Telecom",
+      location: "Tehran, Iran",
+      period: "Jan 2013 – Jan 2016",
+      description: [
+        "Developed Android solutions, improving system reliability by 30% and reducing operational costs by 15%, ensuring high reliability and performance.",
+        "Played a key role in launching the OSS (Operational Support System), streamlining telecommunication operations and improving system management.",
+      ],
+      skills: ["Android", "Backend Development", "OSS", "Telecommunications"],
+    },
   ]
+
+  // Display only the first 4 experiences initially
+  const visibleExperiences = showAll ? experiences : experiences.slice(0, 4)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -82,55 +124,71 @@ export default function Experience() {
   }
 
   return (
-    <section id="experience" className="py-20 bg-muted/50">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-4 text-center mb-10">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Work Experience</h2>
-          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            My professional journey in mobile development.
-          </p>
+      <section id="experience" className="py-20 bg-muted/50">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center space-y-4 text-center mb-10">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Work Experience</h2>
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              My professional journey in mobile development.
+            </p>
+          </div>
+          <motion.div
+              ref={ref}
+              variants={containerVariants}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              className="grid gap-6 md:grid-cols-2"
+          >
+            {visibleExperiences.map((exp, index) => (
+                <motion.div key={index} variants={itemVariants}>
+                  <Card>
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle>{exp.title}</CardTitle>
+                          <CardDescription>
+                            {exp.company} | {exp.location}
+                          </CardDescription>
+                        </div>
+                        <Badge variant="outline">{exp.period}</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-2 mb-4">
+                        {exp.description.map((item, i) => (
+                            <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {exp.skills.map((skill, i) => (
+                            <Badge key={i} variant="secondary">
+                              {skill}
+                            </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+            ))}
+          </motion.div>
+
+          {!showAll && experiences.length > 4 && (
+              <div className="flex justify-center mt-8">
+                <Button onClick={() => setShowAll(true)} variant="outline" className="gap-2">
+                  See More Experiences
+                </Button>
+              </div>
+          )}
+
+          {showAll && (
+              <div className="flex justify-center mt-8">
+                <Button onClick={() => setShowAll(false)} variant="outline" className="gap-2">
+                  Show Less
+                </Button>
+              </div>
+          )}
         </div>
-        <motion.div
-          ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="grid gap-6 md:grid-cols-2"
-        >
-          {experiences.map((exp, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle>{exp.title}</CardTitle>
-                      <CardDescription>
-                        {exp.company} | {exp.location}
-                      </CardDescription>
-                    </div>
-                    <Badge variant="outline">{exp.period}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="list-disc pl-5 space-y-2 mb-4">
-                    {exp.description.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {exp.skills.map((skill, i) => (
-                      <Badge key={i} variant="secondary">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+      </section>
   )
 }
 
